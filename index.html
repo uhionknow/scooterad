@@ -1,859 +1,740 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Us.exe</title>
+    <title>Us.exe - Our Love Story 💖</title>
     <style>
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
         body {
-            background: linear-gradient(135deg, #ffcccb, #ffb6c1);
-            font-family: 'Georgia', serif;
-            color: #333;
+            background: linear-gradient(135deg, #18030c 0%, #38071e 35%, #59092b 70%, #200412 100%);
+            background-attachment: fixed;
+            font-family: 'Times New Roman', Times, serif;
+            color: #fff0f3;
             line-height: 1.6;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             position: relative;
             overflow-x: hidden;
         }
+
+        /* Ambient Glowing Orbs */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.45;
+            pointer-events: none;
+            z-index: 0;
+            animation: orbFloat 12s infinite ease-in-out alternate;
+        }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(60px, -40px) scale(1.2); }
+            100% { transform: translate(-40px, 50px) scale(0.9); }
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            position: sticky;
+            top: 20px;
+            max-width: 850px;
+            margin: 20px auto 30px auto;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 182, 193, 0.3);
+            padding: 12px 25px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 8px 32px 0 rgba(255, 51, 102, 0.2);
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ff80bf;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: #ffd1dc;
+            text-decoration: none;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s, transform 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .music-btn {
+            background: rgba(255, 51, 102, 0.4);
+            border: 1px solid rgba(255, 153, 204, 0.5);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .music-btn:hover {
+            background: rgba(255, 51, 102, 0.7);
+            transform: scale(1.05);
+        }
+
         .container {
             max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.9);
+            margin: 0 auto 50px auto;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 182, 193, 0.25);
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(255, 51, 102, 0.15);
             position: relative;
             z-index: 1;
         }
         h1, h2, h3 {
-            color: #c71585;
+            color: #ff80bf;
             text-align: center;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Times New Roman', Times, serif;
         }
         h1 {
             font-size: 2.5em;
             margin-bottom: 20px;
+            background: linear-gradient(90deg, #ffd1dc 0%, #ffffff 30%, #ff80bf 60%, #ffd1dc 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
         }
         h2 {
             font-size: 1.8em;
-            margin-top: 30px;
+            margin-top: 40px;
+            border-bottom: 2px dashed rgba(255, 153, 204, 0.4);
+            padding-bottom: 10px;
+        }
+        h3 {
+            font-size: 1.3em;
+            margin-top: 25px;
+            color: #ff99cc;
         }
         p {
-            font-size: 1.1em;
+            font-size: 1.05em;
             margin: 15px 0;
             text-align: justify;
+            font-family: 'Times New Roman', Times, serif;
+            color: #ffe3e8;
         }
-        .heart {
-            position: absolute;
-            color: #ff69b4;
-            animation: float 5s infinite;
-            opacity: 0.7;
+        
+        /* Interactive Canvas Layer for Hearts & Sparkles */
+        #heartCanvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
             z-index: 0;
         }
-        .heart:nth-child(1) { top: 5%; left: 2%; font-size: 1.2em; animation-delay: 0s; }
-        .heart:nth-child(2) { top: 10%; right: 2%; font-size: 1.5em; animation-delay: 0.5s; }
-        .heart:nth-child(3) { top: 15%; left: 5%; font-size: 1em; animation-delay: 1s; }
-        .heart:nth-child(4) { top: 20%; right: 5%; font-size: 1.3em; animation-delay: 1.5s; }
-        .heart:nth-child(5) { bottom: 20%; left: 2%; font-size: 1.4em; animation-delay: 2s; }
-        .heart:nth-child(6) { bottom: 15%; right: 2%; font-size: 1.1em; animation-delay: 2.5s; }
-        .heart:nth-child(7) { bottom: 10%; left: 5%; font-size: 1.6em; animation-delay: 3s; }
-        .heart:nth-child(8) { bottom: 5%; right: 5%; font-size: 1.2em; animation-delay: 3.5s; }
-        .heart:nth-child(9) { top: 25%; left: 2%; font-size: 1.3em; animation-delay: 4s; }
-        .heart:nth-child(10) { top: 30%; right: 2%; font-size: 1.5em; animation-delay: 4.5s; }
-        .heart:nth-child(11) { bottom: 25%; left: 2%; font-size: 1.4em; animation-delay: 0s; }
-        .heart:nth-child(12) { bottom: 30%; right: 2%; font-size: 1.1em; animation-delay: 0.5s; }
-        .heart:nth-child(13) { top: 35%; left: 5%; font-size: 1.6em; animation-delay: 1s; }
-        .heart:nth-child(14) { top: 40%; right: 5%; font-size: 1.2em; animation-delay: 1.5s; }
-        @keyframes float {
-            0% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-10px) scale(1.1); }
-            100% { transform: translateY(0) scale(1); }
-        }
+
+        /* Poems Styling */
         .poem {
-            background: #fff0f5;
+            background: rgba(255, 240, 245, 0.08);
             padding: 20px;
             margin: 20px 0;
             border-left: 5px solid #ff69b4;
             border-radius: 10px;
+            border: 1px solid rgba(255, 105, 180, 0.2);
         }
-        @media (max-width: 600px) {
-            .container {
-                padding: 15px;
-            }
-            h1 {
-                font-size: 2em;
-            }
-            h2 {
-                font-size: 1.5em;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="heart">♥</div>
-    <div class="heart">♥</div>
-    <div class="heart">♥</div>
-    <div class="heart">♥</div>
-    <div class="heart">♥</div>
-    <div class="heart">♥</div>
-    <div class="heart">♥</div>
-    <div class="heart">♥</div>
-    <div class="heart">♥</div>
-    <div class="heart">♥</div>
-    <div class="heart">♥</div>
-    <div class="heart">♥</div>
-    <div class="heart">♥</div>
-    <div class="heart">♥</div>
-    <div class="container">
-        <h1>Us.exe</h1>
-
-        
-        <p>Hey Samwise,</p>
-        <p>Hope you’re doing alright. I meant to do this last month but uh well here we are. Seven months like damn that’s quite a lot of time and to be honest I thought we wouldn’t go past three lmao uh yeah but man Im so glad that I was wrong cause your one of the best things that could ever happen to me and im grateful that you stuck along. I know this relationship isn’t perfect uh we’ve had our ups and downs and i know that i could forsure do way better as a boyfriend but at the end of every day, it’s you I want to spend my time with. It’s you I want to be with. These past seven months have made me realize what love really is and thanks to you, I’ve learned how to love not in some empty space, but with depth and meaning(I hope you got that reference). You’ve made me want to grow. To be better. For you soooo… indirectly, you’re making me a better person. And for that thanks a lot gng appreciate it a lot. I hope that u like what I made for you and I know that its not much but its honest work and even if you find it eh I made this for you cuz I love you To think over an year ago, we were just strangers and now I cant go buy a whole day not talking to you. I hope this takes us somewhere nice and beautiful in the end and looking back at how far we've come im pretty sure we are getting there love. well all I want to say is that I love you very dearly and your everything that I have ever asked for and as yk to comemerate uh i thought you know we could yk go back and see how you know how we got together in the first place and what happend till now </p>
-
-        <h2>Timeline</h2>
-
-        <h3>July</h3>
-        <p>Well, I mean it started off with the very um interesting Kozhikode goth mommy text lmao. Nothing much happened other than uh… me thinking you were a weird Bengali weirdo with no bitches.
-Oh yeah and I found out you were Malayali, so that’s nice.
-Also that your such an aesthetic vanam oml man yes yk i thought to myself who does ts bitch think she is bro uh no offense love. </p>
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Image Display</title>
-  <style>
-    body {
-      background-color: #ffe6f0;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      padding-top: 50px;
-    }
-
-    img {
-      width: 250px;
-      border: 3px solid #ff99cc;
-      border-radius: 15px;
-    }
-
-    p {
-      color: #cc3366;
-      font-style: italic;
-      margin-top: 10px;
-    }
-  </style>
-</head>
-<body>
-
-<img src="https://i.imgur.com/zF2Wj1L.jpeg" alt="Our first picture together">
-  <p>nice way to start things off yes 💌</p>
-
-</body>
-</html>
-
-
-        <h3>October</h3>
-        <p>Well I believe October was like when we became really good friends to be honest
-I remember texting you all day and surprisingly not getting bored  cuz I had a lot of other uh side chicks at the time ykwim and they were boring (I’m joking).
-
-Oh yes, I remember you ghosting me for a week and that hurt my ego… but oh well and this was the first time that we hung out. You asked if I wanted to play table tennis and we did.
-
-I remember you telling me that we should do this again and I was like: hm is she hitting on me? idk.
-
-Well yes, October was quite an influential month in our relationship yes.</p>
-
-        <h3>November</h3>
-        <p>Well this was the month that completely uh… changed everything if I’m not mistaken.
-
-I felt like I was slowly starting to crush on you. At first, I was in denial icl  I was like Dude… it’s Samah. Come on man. Seriously?
-
-and then my friends started shipping us and I tried to act disgusted, but every time I told them I didn’t like you, I knew I was lying to myself.
-
-I remember that day in the IP lab. Bro. I was mindblown at how beautiful you looked.
-
-Till now not gonna lie nothing’s even come close to what I saw that day. I just took a glance, a short glance, and that was enough.
-
-My heart was throbbing like crazy.You have no idea. I couldn’t stop thinking about you the whole day.
-
-And I knew — that wasn’t some oh she’s aight kinda crush.
-That day I knew I was truly into you.
-
-Then I told you I had a crush like after ip lab and i expected you to say the same but uh no and that was disaapointing anyways 
-
- then we started the who’s your crush game, which I hated very much like bro just leave me alone gng.
-
-But like a week after I told you I had a crush, you told me you did too.
-
-That gave me hope. Kinda.</p>
-
-        <h3>December</h3>
-        <p>Now December is the month where well we got together.
-
-You know, I was so tired of playing that "who’s your crush?" game, and whenever we went out like bro ugh wallah it was so annoying, I wanted to tell you that I’m so into you… but yeah.
-
-I was, you know, so scared to sacrifice my friendship with you.
-Like, what if you didn’t like me and stuff?
-
-And I remember you bringing up that you had another crush as well and i still do firmly thats true(hoe) and did make me uh question myself
-
-But um, in the end I asked you out because my friends persisted me so much yeah uh you owe joshua man like he did the heavy lifting and all idk what i meant by that
-
-And I’m glad that I did, yk.
-
-I missed you so much when you went to Georgia, so that kind of made me want to ask you out even more like i couldnt hold it in anymore and if i did id prolly explode
-
-As you're aware, I had this whole idea of asking you out with the help of a fridge… but uh the fridge was gone and it was too much work.
-
-So well me, Joshua, and Zahil rehearsed how I’d propose and it was very cliché and dramatic icl.
-
-I’m glad I didn’t do that, cuz looking back on it um it’s kinda ew.
-
-I remember the day I asked you out December 26(I hope thats right).
-
-Yeah… I could have done way, way better tbh, and you didn’t look impressed as well. I mean, fair enough, yk.
-
-But well awesome amazing rizz was too much for you to handle and well i won hahaahahha. I never lose and uh 
-
-thank you for not turning me down cuz that would have genuinely left a scar on me and id hate women for the rest of my life.
-
-I remember that night you said “Goodnight, love”  and I remember getting butterflies and twirling around alot in bed hmm yeah the day i asked you out that was quite the day yes
-
-oh yeah i think that was the first time that i ever got butterflies so good job man.
-
-And yes, I remember being in a trance-like state until the end of the year.</p>
-
-        <h3>January</h3>
-        <p>Well January was alright to be honest.
-
-You know, we started talking and I really started to really, really like you.
-
-We had very nonchalant dates and stuff, yes.
-
-I remember holding your hand for the first time very awkward, but also very amazing as well.
-
-And I remember how we used to text each other how much we missed our hands' warmth like bro damn, we were like really innocent back then.
-
-Well apart from that, we did get to know each other even more, yes.
-
-And I believe, like slowly but surely, I started to fall in love with you.</p>
-
-        <h3>February</h3>
-        <p>Well February was quite the month, I believe  yeah, it was something. Yes.
-
-I probably won’t forget what happened this month until the day I die, probably.
-
-Well, February started off ass dogshit, yes.
-
-I well knew that I was very much in love with you like head over heels, yes and I knew that you weren’t and you have no idea how sad and just bumped i was like it was a really bad experience 
-
-I remember the idea of love being scary to you, and I’m pretty sure you’re still scared about it unfortunately but uh oh well.
-
-I remember ranting to Zahil how ass it felt, and I haven’t told this to you but
-
-I thought of breaking up um yeah surprise haha idk man i wasnt thinking straight at that time and uh can you blame me bro like imagine the first women whom you feel in love with doesnt love you back like come on.
-
- I was afraid that you would never ever fall in love with me so um idk man
-
-I remember I did put some effort into the card I made for you during Valentine’s and I expected a hug(which was the best case scenario) or an aww(worst case scenario) but uh well,
-
-You said “thank you” um quite the romantic icl.
-
-That caught me off guard, yes, and I can’t lie  I was kinda disappointed.
-
-I still remember ranting to Zahil and Joshua on how you’d never love me, and looking back on it, I feel sorry for both of them yk.
-
-Well, I thought nothing was gonna change.
-
-But uh  woah.
-
-My parents are outta town and there’s no school. 11th grade’s done. Hmmmmmmmmm.
-
-Well, you came over and we watched a movie that was nice, yes yk tbh i didnt like the movie cuz plot armour anyways well 
-
-what else was special about that night was  well um 
-
-We had our first kiss.
-
-You know, I expected our first kiss to be really gentle, sweet, and romantic 
-
-But uh damn bro it was so fucking hot.
-
-I mean it was gentle and sweet at first, but then like bro, you were on top of me gng ion think first kisses go like that.
-
-But hey, I’m not complaining.
-
-And what happened the next few days… well, I don’t think anything can top that now.
-
-Like, how am I gonna top eating ice cream off boobies like seriously, damn.
-
-And by the end of it all, I knew that you loved me.
-
-And you knew that I did too.
-
-But that was quite obvious, no?</p>
-
-        <h3>April</h3>
-        <p>Ion remember anything that happened in March other than just us vigorously making out on the penthouse for over 3 hours.
-
-Like how’d we do that outside for 3 hours I really don’t know.
-
-and in April well, school reopened and uh… we got busy.
-
-But still, we’d find ways to hang out here and there.
-
-Yk I feel like our love for each other grew like crazy and that’s nice.
-
-You made pretty cool cards and stuff, and like ion like when you do that cuz I can’t do that, and I don’t like that cuz I couldn’t yk do those.
-
-But I tried, yes.
-
-I tried writing you poems and stuff and it's meh compared to your cards cuz they are like so nice bro and um i just learned to love you even more than before so thats nice yes
-
-        <h3>May–July</h3>
-        <p>I was meant to do this in June  but uh, I couldn’t complete it in time amd i dont remember anything that happend during june yes. So yes, we are here may june and now july.
-
-well what happened during May and June?
-
-Well, nothing much.
-
-Oh yeah, we uh became more freakier I believe like yeah man i hope i dont get pregnant anytime soon and well a
-
-handful well who am i kidding more than a handful of arguments and stuff which um well was not nice.
-
-But well, it was a learning experience, and there’s definitely more to come and oh boy i cant wait like im sooooo hyped gng.
-
-You know, writing all this and looking back on it, we’ve had such a beautiful journey together and stuff
-
-and it just made me realize that I’m so madly in love with you.
-
-You know, moments like laughing together and just goofing around —thats what makes me happy i am genuinely so happy when i am with you i have no worries no stress no kind of anxiety when im with you and thats because your the best and your perfect
-
-Ion know man, it’s something that I really can’t put into words, you know?
-
-Whenever I’m with you, I feel whole.
-
-I feel like there is something to look forward to  something beautiful.
-
-and that keeps me going every day, you know.
-
-Just to spend time with you  that’s all I could ask for tbh.
-
-And that’s all I want.
-
-All I want is you and only you and uh i love laaban.
-
-Well, I hope this was like a fun trip down memory lane…
-
-And well 
-
-I love you so much and um if this turned out to be a bummer well apologies my lady will do better next time trust uh yeah sorry</p>
-
-        <h2>Poems</h2>
-        <p>Hey im like just gonna upload almost most of the poems which iv wrote about you some are still a work in progress and i beilive you have read most but still im just here to flex my writing to be honest and well i dont think you have all of them so here you go and well all this is for you because your the best gng and i love you mwuahh</p>
-
-        <div class="poem">
-            <h3>Mountains</h3>
-            <p>As I traverse through these mountains,<br>
-            Their peaks rise soft yet bold,<br>
-            The longer I linger, the grander they get,<br>
-            A sight both warm and cold.</p>
-            <p>A landscape sculpted to tease,<br>
-            The more I enjoy the view,<br>
-            the more I want to stay and linger<br>
-            Lost in their warmth and ease</p>
-            <p>As I bid farewell,<br>
-            The mountain slowly starts to melt<br>
-            Resting, waiting, knowing well,<br>
-            We’ll meet again another night</p>
-        </div>
-
-        <div class="poem">
-            <h3>Yay</h3>
-            <p>You love me now, the way I’ve loved you,<br>
-            A silent bond that feels so true<br>
-            And though we danced around this space only for a while<br>
-            We’ve found each other in this quiet grace.</p>
-            <p>Now the fall is no longer alone,<br>
-            Your heart, like mine, has found its home.<br>
-            For in this love, so deep and sweet,<br>
-            We’ve both found what makes us complete.</p>
-        </div>
-
-        <div class="poem">
-            <h3>3 NGC 3372</h3>
-            <p>Your the quiet between stars<br>
-            Where all the noise fades out<br>
-            And in the dark I found something,someone</p>
-            <p>Were stardust lost in space and time<br>
-            falling through the same sky<br>
-            But when your eyes catch mine,<br>
-            It feels like we’re meant to fly</p>
-            <p>I can’t explain and I don’t need to<br>
-            There’s something in the way you are,<br>
-            Like youv been here forever,<br>
-            And im just catching up with who you are</p>
-        </div>
-
-        <div class="poem">
-            <h3>Falling</h3>
-            <p>I fall, and yet, you don’t know,<br>
-            My heart descending, soft and slow.<br>
-            In every glance I see the world<br>
-            But to you I’m just a passing thought</p>
-            <p>As I reach for something that I can’t reach<br>
-            Your eyes don’t see what mine can see,<br>
-            A love that’s there, but only for me.<br>
-            You never asked, you never knew,<br>
-            That I’ve been falling, falling for you.</p>
-            <p>And though you don’t return the fall,<br>
-            I’ll catch myself, through it all<br>
-            For in this quiet, aching grace<br>
-            At least I’ve loved in this empty space</p>
-        </div>
-
-        <div class="poem">
-             <h3>Hands</h3>
-            <p>The time we held, so soft yet true and<br>
-            as our eyes met, the world withdrew.<br>
-            In that touch, I felt it something,<br>
-            A bond that only we both knew.<br>
-            Fingers laced, a perfect fit,<br>
-            A silent promise that we belonged in it.<br>
-            No need for words no need for plans,<br>
-            Just love alive in our hands.<br>
-            And though the years may come and go,<br>
-            Through the highs and the lows,<br>
-            I’ll hold your hand like I did back then,<br>
-            My love, my someone, my dearest friend</p>
-        </div>
-    </div>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photobooth</title>
-    <style>
-        #video, #photo {
-            border: 2px solid #fff;
-            width: 640px;
-            height: 480px;
-            background: #000;
-        }
-        .container {
+        .poem p {
             text-align: center;
-            margin-top: 20px;
+            font-style: italic;
+            color: #ffe3e8;
         }
-        button {
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
+
+        /* Photobooth Styling */
+        .photobooth {
+            text-align: center;
+            background: rgba(255, 245, 248, 0.08);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border: 2px dashed rgba(255, 153, 204, 0.5);
+        }
+        #video, #photo {
+            max-width: 100%;
+            width: 480px;
+            height: auto;
+            background: #000;
+            border: 3px solid #ff99cc;
+            border-radius: 10px;
+        }
+        .btn-capture {
+            margin: 15px 0;
+            padding: 10px 25px;
+            background-color: #ff69b4;
             color: white;
             border: none;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-capture:hover {
+            background-color: #c71585;
+        }
+
+        /* Gallery Styling - Polaroid Grid */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+            align-items: start;
+            margin-top: 30px;
+            justify-items: center;
+        }
+
+        .image-card {
+            background: #fff;
+            color: #2b111e;
+            padding: 15px 15px 20px 15px;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 300px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #45a049;
+
+        .image-card:nth-child(odd) {
+            transform: rotate(-2deg);
+        }
+        .image-card:nth-child(even) {
+            transform: rotate(2deg);
+        }
+        .image-card:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            box-shadow: 0 18px 40px rgba(255, 51, 102, 0.4);
+            z-index: 10;
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 2px;
+            border: 1px solid #eee;
+        }
+
+        .image-card p {
+            color: #4a2838;
+            font-style: italic;
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 0;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        /* Modal for Image Preview */
+        #imageModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+        #imageModal img {
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 10px;
+            border: 3px solid #ff99cc;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.5);
+        }
+        #imageModal p {
+            color: #fff0f3;
+            font-size: 1.2em;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .top-nav {
+                flex-direction: column;
+                gap: 12px;
+                padding: 15px;
+                border-radius: 20px;
+                margin: 10px;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+            }
+            .container { padding: 15px; margin: 15px; }
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.4em; }
         }
     </style>
 </head>
 <body>
+
+    <!-- Background Ambient Glowing Orbs -->
+    <div class="glow-orb" style="background: rgba(255, 51, 102, 0.3); width: 350px; height: 350px; top: 10px; left: 5px;"></div>
+    <div class="glow-orb" style="background: rgba(219, 39, 119, 0.3); width: 300px; height: 300px; bottom: 20px; right: 10px;"></div>
+
+    <!-- Interactive Canvas Layer for Floating Hearts & Click Bursts -->
+    <canvas id="heartCanvas"></canvas>
+
+    <!-- Top Floating Navigation Bar -->
+    <nav class="top-nav">
+        <a href="#letter" class="nav-brand">
+            <span>💖</span> Us.exe
+        </a>
+        <ul class="nav-links">
+            <li><a href="#letter">✉️ Letter</a></li>
+            <li><a href="#timeline">🔗 Timeline</a></li>
+            <li><a href="#poems">🌿 Poems</a></li>
+            <li><a href="#photobooth">📸 Photobooth</a></li>
+            <li><a href="#photos">🖼️ Photos</a></li>
+        </ul>
+        <button class="music-btn" id="musicToggle" title="Toggle Ambient Music">🎵</button>
+    </nav>
+
     <div class="container">
-        <h2>Photobooth</h2>
-        <p>dude isnt this cool our very own photobooth like we can take pictures and stuff and like take more pics and like we could kiss and take pictures or bite idk man </p>
-        <video id="video">Video stream not available.</video>
-        <br>
-        <button id="capture">Take Photo</button>
-        <canvas id="canvas" style="display:none;"></canvas>
-        <br>
-        <img id="photo" src="" alt="Captured Photo">
+        <div id="letter">
+            <h1>Us.exe</h1>
+
+            <p>Hey Samwise,</p>
+            <p>Hope you’re doing alright. I meant to do this last month but uh well here we are. Seven months like damn that’s quite a lot of time and to be honest I thought we wouldn’t go past three lmao uh yeah but man Im so glad that I was wrong cause your one of the best things that could ever happen to me and im grateful that you stuck along. I know this relationship isn’t perfect uh we’ve had our ups and downs and i know that i could forsure do way better as a boyfriend but at the end of every day, it’s you I want to spend my time with. It’s you I want to be with. These past seven months have made me realize what love really is and thanks to you, I’ve learned how to love not in some empty space, but with depth and meaning(I hope you got that reference). You’ve made me want to grow. To be better. For you soooo… indirectly, you’re making me a better person. And for that thanks a lot gng appreciate it a lot. I hope that u like what I made for you and I know that its not much but its honest work and even if you find it eh I made this for you cuz I love you To think over an year ago, we were just strangers and now I cant go buy a whole day not talking to you. I hope this takes us somewhere nice and beautiful in the end and looking back at how far we've come im pretty sure we are getting there love. well all I want to say is that I love you very dearly and your everything that I have ever asked for and as yk to comemerate uh i thought you know we could yk go back and see how you know how we got together in the first place and what happend till now</p>
+        </div>
+
+        <div id="timeline">
+            <h2>Timeline</h2>
+
+            <h3>July</h3>
+            <p>Well, I mean it started off with the very um interesting Kozhikode goth mommy text lmao. Nothing much happened other than uh… me thinking you were a weird Bengali weirdo with no bitches. Oh yeah and I found out you were Malayali, so that’s nice. Also that your such an aesthetic vanam oml man yes yk i thought to myself who does ts bitch think she is bro uh no offense love.</p>
+            
+            <h3>October</h3>
+            <p>Well I believe October was like when we became really good friends to be honest. I remember texting you all day and surprisingly not getting bored cuz I had a lot of other side chicks at the time ykwim and they were boring (I’m joking). Oh yes, I remember you ghosting me for a week and that hurt my ego… but oh well and this was the first time that we hung out. You asked if I wanted to play table tennis and we did. I remember you telling me that we should do this again and I was like: hm is she hitting on me? idk. Well yes, October was quite an influential month in our relationship yes.</p>
+
+            <h3>November</h3>
+            <p>Well this was the month that completely uh… changed everything if I’m not mistaken. I felt like I was slowly starting to crush on you. At first, I was in denial icl I was like Dude… it’s Samah. Come on man. Seriously? and then my friends started shipping us and I tried to act disgusted, but every time I told them I didn’t like you, I knew I was lying to myself. I remember that day in the IP lab. Bro. I was mindblown at how beautiful you looked. Till now not gonna lie nothing’s even come close to what I saw that day. I just took a glance, a short glance, and that was enough. My heart was throbbing like crazy. You have no idea. I couldn’t stop thinking about you the whole day. And I knew — that wasn’t some oh she’s aight kinda crush. That day I knew I was truly into you. Then I told you I had a crush like after ip lab and i expected you to say the same but uh no and that was disaapointing anyways then we started the who’s your crush game, which I hated very much like bro just leave me alone gng. But like a week after I told you I had a crush, you told me you did too. That gave me hope. Kinda.</p>
+
+            <h3>December</h3>
+            <p>Now December is the month where well we got together. You know, I was so tired of playing that "who’s your crush?" game, and whenever we went out like bro ugh wallah it was so annoying, I wanted to tell you that I’m so into you… but yeah. I was, you know, so scared to sacrifice my friendship with you. Like, what if you didn’t like me and stuff? And I remember you bringing up that you had another crush as well and i still do firmly thats true(hoe) and did make me uh question myself. But um, in the end I asked you out because my friends persisted me so much yeah uh you owe joshua man like he did the heavy lifting and all idk what i meant by that. And I’m glad that I did, yk. I missed you so much when you went to Georgia, so that kind of made me want to ask you out even more like i couldnt hold it in anymore and if i did id prolly explode. As you're aware, I had this whole idea of asking you out with the help of a fridge… but uh the fridge was gone and it was too much work. So well me, Joshua, and Zahil rehearsed how I’d propose and it was very cliché and dramatic icl. I’m glad I didn’t do that, cuz looking back on it um it’s kinda ew. I remember the day I asked you out December 26(I hope thats right). Yeah… I could have done way, way better tbh, and you didn’t look impressed as well. I mean, fair enough, yk. But well awesome amazing rizz was too much for you to handle and well i won hahaahahha. I never lose and uh thank you for not turning me down cuz that would have genuinely left a scar on me and id hate women for the rest of my life. I remember that night you said “Goodnight, love” and I remember getting butterflies and twirling around alot in bed hmm yeah the day i asked you out that was quite the day yes oh yeah i think that was the first time that i ever got butterflies so good job man. And yes, I remember being in a trance-like state until the end of the year.</p>
+
+            <h3>January</h3>
+            <p>Well January was alright to be honest. You know, we started talking and I really started to really, really like you. We had very nonchalant dates and stuff, yes. I remember holding your hand for the first time very awkward, but also very amazing as well. And I remember how we used to text each other how much we missed our hands' warmth like bro damn, we were like really innocent back then. Well apart from that, we did get to know each other even more, yes. And I believe, like slowly but surely, I started to fall in love with you.</p>
+
+            <h3>February</h3>
+            <p>Well February was quite the month, I believe yeah, it was something. Yes. I probably won’t forget what happened this month until the day I die, probably. Well, February started off ass dogshit, yes. I well knew that I was very much in love with you like head over heels, yes and I knew that you weren’t and you have no idea how sad and just bumped i was like it was a really bad experience I remember the idea of love being scary to you, and I’m pretty sure you’re still scared about it unfortunately but uh oh well. I remember ranting to Zahil how ass it felt, and I haven’t told this to you but I thought of breaking up um yeah surprise haha idk man i wasnt thinking straight at that time and uh can you blame me bro like imagine the first women whom you feel in love with doesnt love you back like come on. I was afraid that you would never ever fall in love with me so um idk man I remember I did put some effort into the card I made for you during Valentine’s and I expected a hug(which was the best case scenario) or an aww(worst case scenario) but uh well, You said “thank you” um quite the romantic icl. That caught me off guard, yes, and I can’t lie I was kinda disappointed. I still remember ranting to Zahil and Joshua on how you’d never love me, and looking back on it, I feel sorry for both of them yk. Well, I thought nothing was gonna change. But uh woah. My parents are outta town and there’s no school. 11th grade’s done. Hmmmmmmmmm. Well, you came over and we watched a movie that was nice, yes yk tbh i didnt like the movie cuz plot armour anyways well what else was special about that night was well um We had our first kiss. You know, I expected our first kiss to be really gentle, sweet, and romantic But uh damn bro it was so fucking hot. I mean it was gentle and sweet at first, but then like bro, you were on top of me gng ion think first kisses go like that. But hey, I’m not complaining. And what happened the next few days… well, I don’t think anything can top that now. Like, how am I gonna top eating ice cream off boobies like seriously, damn. And by the end of it all, I knew that you loved me. And you knew that I did too. But that was quite obvious, no?</p>
+
+            <h3>April</h3>
+            <p>Ion remember anything that happened in March other than just us vigorously making out on the penthouse for over 3 hours. Like how’d we do that outside for 3 hours I really don’t know. and in April well, school reopened and uh… we got busy. But still, we’d find ways to hang out here and there. Yk I feel like our love for each other grew like crazy and that’s nice. You made pretty cool cards and stuff, and like ion like when you do that cuz I can’t do that, and I don’t like that cuz I couldn’t yk do those. But I tried, yes. I tried writing you poems and stuff and it's meh compared to your cards cuz they are like so nice bro and um i just learned to love you even more than before so thats nice yes</p>
+
+            <h3>May–July</h3>
+            <p>I was meant to do this in June but uh, I couldn’t complete it in time amd i dont remember anything that happend during june yes. So yes, we are here may june and now july. well what happened during May and June? Well, nothing much. Oh yeah, we uh became more freakier I believe like yeah man i hope i dont get pregnant anytime soon and well a handful well who am i kidding more than a handful of arguments and stuff which um well was not nice. But well, it was a learning experience, and there’s definitely more to come and oh boy i cant wait like im sooooo hyped gng. You know, writing all this and looking back on it, we’ve had such a beautiful journey together and stuff and it just made me realize that I’m so madly in love with you. You know, moments like laughing together and just goofing around —thats what makes me happy i am genuinely so happy when i am with you i have no worries no stress no kind of anxiety when im with you and thats because your the best and your perfect Ion know man, it’s something that I really can’t put into words, you know? Whenever I’m with you, I feel whole. I feel like there is something to look forward to something beautiful. and that keeps me going every day, you know. Just to spend time with you that’s all I could ask for tbh. And that’s all I want. All I want is you and only you and uh i love laaban. Well, I hope this was like a fun trip down memory lane… And well I love you so much and um if this turned out to be a bummer well apologies my lady will do better next time trust uh yeah sorry</p>
+
+            <h3>August</h3>
+            <p>well wow this was almost an year ago which is kind of crazy lol. well we did go to the library alot yes very fun library dates and all we had and then oh yeah i had like my cervical head problem thing and i thought that i would die yes very bad stuff and yeah im pretty sure this was when yk we started moving on from the honeymoon phase of our relationship and like we had quite a few problems here and there and well this was when we started to argue for the first time and all like serious stuff anyways i mean i really fun month to rememberr</p>
+
+            <h3>September</h3>
+            <p>well i think we were busy with exams half yearly and all but again we did hangout i did comeover to your house and stuff yes we did alot of 696969 im pretty sure that was all we did in bed yesi love doing 69 with you yes pinne entha september el wellllll i dont remember much about september it was pretty chill apart from bombbing half yearly lmao</p>
+
+            <h3>October</h3>
+            <p>Well i do remember october pretty clearly yes how can i forget this month. Well this month didnt start of great cuzzz well i did some very bad bad stuff which i think we both know and im not mentioning here cuz like yes i hate myself for that and you said some stuff and then like we ended up taking a break this month or was that august idk i was pretty hurt oh yeah that was august nvm well anyway i just hated myself for what i did to you and then well we slowly yk started patching things up and hey look farewell ayi. we danced togather infront of that many people just us i mean i still dont know how i did that tbh and like looking back on it even though if it was very cringe and all i still loved every bit of it and oh yeah how can i forget after farewell i kidnapped you from your sleepoevr and we were just enjoying eachother in the terrace aahhhhh thinking about it brings a tear to my eye. we were so good gng i envy us alot yk well i mean it was a really nice way to end of the month</p>
+
+            <h3>November</h3>
+            <p>Eeheheh novemeber nente birthday arinu sooo athinte kore okke gift vangikal writing letters making cardsss buying choclate ath okke arinu and thennn oh yes birthday sex you said you wanted i mean i wanted it to but wtv and thennn oh yes was this the month that ur parents went to india and i came over morning and night and all we did was like ;P yes. Damn that was fun and i remember annihilating you at darts at your house haha loser im better than you at everything i believe. Dont be sad honey its not a competition. Well november was a pretty easy going month for us oh yes pre boards okke undarinu which is uh yes wtv</p>
+
+            <h3>December</h3>
+            <p>well december was really nice i believe we went out on really amazing and nice dates and like the weather was soooo goood. i still remember that date we had on the 16th it was perfect. strolling around albidda and like the weather was all just very amazing andd what else welll oh bitch you left me out in the cold i still remembeer not very cool and ooooooooooooohhhhhhhhhh yesss you got me a veryyyy nice card for my birthday and hotwheel batman car which was beryyy cool i love(i still havent opened the cover) and well december was also okok</p>
+
+            <h3>January</h3>
+            <p>well now its like full exam season from now uhm we like had pb2s and oh yess nente jee i was soo worried and like i actually prayed for the first time in like sooooo long and hey i guess the prayers worked cuz loook at you nowww bbgbgg well anyways January i did come over and stuff quite a few times made love alot of kiss kiss kiss and like bery stress stress especially and like i think we both were yk sad that things were coming to an end yk like school and all so yeah thats all i can remwmbwer for jan</p>
+
+            <h3>February</h3>
+            <p>well feb started of with like the school farewell and woowww you looked veryryryryyr pretty and liek i was sooo awww my gawddd and all and thenn yeah we graduated togather which was pretty nice and all and well things started going downhill for us from this month looking back on it like board exams got cancelled and like ath kazhin i think my depression started and i tried to break up with you and all well yeah ennik arella it was js a very idk month man</p>
+
+            <h3>March</h3>
+            <p>well march was bit of the same thing ig you were studying for jee and all i was trying to study for neet but uh well i couldnt cuz i knew i was fucked so no point ig and then like alot of other stuff reallt affected my mental health and like as a result of that our relationship took alot of serious hits and all which was well yeah saramella ig cuz we strong asf</p>
+
+            <h3>April</h3>
+            <p>well april was nente jee second session and i prayed extra hard and all for you and well april we did hangout like just a bit i beliebe cuz i locked in april neet(all for nothing) and then what all happened oh yeah result wait no results didnt come april yes and then what all happened then oh yeha more dates we went bowling like once i think this month and well yes thats all i can remember</p>
+
+            <h3>May</h3>
+            <p>well may was a pretty nice month yk we like spent alot of time i think maybe idk well we did hangout and stuff we watched a movie at my place went to alot of dates and all which was very nice oh yes i think we went to watch our first movie this month i think obsession yes which was very nice and you came over to my place and we watched a movie and we went to roam around alot of places which was very very fun. we went museum souq and like oh yeah that chicken place moq and all oh yes vendome and uh where else im not sureee but kure okke poyi evidandd okee</p>
+
+            <h3>June</h3>
+            <p>well after this month everything changed. you were pretty busy this month i believe so uhm we didnt get to hangout as much and all yeah like only hungout 2-3 times and all which is totally fineeee i was fineeee its not like that was going to be the last time i got to see you in like idk how long hahahah. well yeah i cherish this month alot cuz this is the last memory i have of us spending time togather in person and all. well that last hangout was really special and really nice for me yk i knew that i wouldnt see you again in a really really really long time and like its the last memory i have of you so i keep it really close to my heart and oh yeah rennet and we got our board results which was meh yeah haha lol funny yes and then we both said goodbye to our friends family and this country which was hard for the both of us i believe</p>
+
+            <h3>July - November</h3>
+            <p>well i dont think there is alot to say that has happened between us ever since long distance started well in july there was basically nothing we were spending time with family and all and yes you got into your dream uni which isss aweeesomee and then well i started my coaching july end i think and my parents and all left and like you started college and you were busy living your own life and like honestly i felt really lonely like most of august and stuff like spending time with you to me then and now is like now kind of like a luxury and stuff which ik is js me being dramatic but compared to what we had and all this is just poop. well hopefully this ends soon yes and well we both changed as people. we both arent the same two lovers that spent hours and hours just laughing around and having fun. this relationship wont be the same again after what has happened these 5 months and all. The stuff you said and the stuff i said cant be ever taken back and yeah that sucks alot but we must push forward gng oh yeah i tried breaking up with you 2 times during the sppan of these 5 months well but the truth is i really cant live or function without you. I need you. At the end of the day no matter how many times we argue and how many ever times we fight or sleep with a heavy heart ill always and i mean it ill always love you and ill be there for you gngng and yes dont forget i always be your number 1 fan. To my dear friend to my dear lover i hope this year treats the both of us well yours truly, ,&lt;3</p>
+        </div>
+
+        <div id="poems">
+            <h2>Poems</h2>
+            <p>Hey im like just gonna upload almost most of the poems which iv wrote about you some are still a work in progress and i beilive you have read most but still im just here to flex my writing to be honest and well i dont think you have all of them so here you go and well all this is for you because your the best gng and i love you mwuahh</p>
+
+            <div class="poem">
+                <h3>Mountains</h3>
+                <p>As I traverse through these mountains,<br>
+                Their peaks rise soft yet bold,<br>
+                The longer I linger, the grander they get,<br>
+                A sight both warm and cold.</p>
+                <p>A landscape sculpted to tease,<br>
+                The more I enjoy the view,<br>
+                the more I want to stay and linger<br>
+                Lost in their warmth and ease</p>
+                <p>As I bid farewell,<br>
+                The mountain slowly starts to melt<br>
+                Resting, waiting, knowing well,<br>
+                We’ll meet again another night</p>
+            </div>
+
+            <div class="poem">
+                <h3>Yay</h3>
+                <p>You love me now, the way I’ve loved you,<br>
+                A silent bond that feels so true<br>
+                And though we danced around this space only for a while<br>
+                We’ve found each other in this quiet grace.</p>
+                <p>Now the fall is no longer alone,<br>
+                Your heart, like mine, has found its home.<br>
+                For in this love, so deep and sweet,<br>
+                We’ve both found what makes us complete.</p>
+            </div>
+
+            <div class="poem">
+                <h3>3 NGC 3372</h3>
+                <p>Your the quiet between stars<br>
+                Where all the noise fades out<br>
+                And in the dark I found something,someone</p>
+                <p>Were stardust lost in space and time<br>
+                falling through the same sky<br>
+                But when your eyes catch mine,<br>
+                It feels like we’re meant to fly</p>
+                <p>I can’t explain and I don’t need to<br>
+                There’s something in the way you are,<br>
+                Like youv been here forever,<br>
+                And im just catching up with who you are</p>
+            </div>
+
+            <div class="poem">
+                <h3>Falling</h3>
+                <p>I fall, and yet, you don’t know,<br>
+                My heart descending, soft and slow.<br>
+                In every glance I see the world<br>
+                But to you I’m just a passing thought</p>
+                <p>As I reach for something that I can’t reach<br>
+                Your eyes don’t see what mine can see,<br>
+                A love that’s there, but only for me.<br>
+                You never asked, you never knew,<br>
+                That I’ve been falling, falling for you.</p>
+                <p>And though you don’t return the fall,<br>
+                I’ll catch myself, through it all<br>
+                For in this quiet, aching grace<br>
+                At least I’ve loved in this empty space</p>
+            </div>
+
+            <div class="poem">
+                <h3>Hands</h3>
+                <p>The time we held, so soft yet true and<br>
+                as our eyes met, the world withdrew.<br>
+                In that touch, I felt it something,<br>
+                A bond that only we both knew.<br>
+                Fingers laced, a perfect fit,<br>
+                A silent promise that we belonged in it.<br>
+                No need for words no need for plans,<br>
+                Just love alive in our hands.<br>
+                And though the years may come and go,<br>
+                Through the highs and the lows,<br>
+                I’ll hold your hand like I did back then,<br>
+                My love, my someone, my dearest friend</p>
+            </div>
+        </div>
+
+        <div id="photobooth">
+            <!-- Interactive Photobooth Section -->
+            <div class="photobooth">
+                <h2>Our Photobooth</h2>
+                <p>dude isnt this cool our very own photobooth like we can take pictures and stuff and like take more pics and like we could kiss and take pictures or bite idk man</p>
+                
+                <video id="video" autoplay playsinline>Video stream not available.</video>
+                <br>
+                <button id="capture" class="btn-capture">Take Photo 📸</button>
+                <canvas id="canvas" style="display:none;"></canvas>
+                <br><br>
+                <img id="photo" src="" alt="Captured photo will appear here">
+            </div>
+        </div>
+
+        <!-- Photo Gallery Section -->
+        <div id="photos">
+            <h2>Photos</h2>
+            <p style="text-align: center; font-style: italic; color: #ff99cc; margin-bottom: 20px;">Click any photograph to view it up close!</p>
+            <div class="gallery">
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/C9DVPIr.jpeg" alt="After Valentine's card">
+                    <p>First Picture Together<br><span style="font-size: 0.85em; opacity: 0.8;">our very first picture togather it was quite windy and awkward but nice</span></p>
+                </div>
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/zo8KfA6.jpeg" alt="Penthouse moment">
+                    <p>Valentine's Card<br><span style="font-size: 0.85em; opacity: 0.8;">this was after i gave you my first ever card on valentines</span></p>
+                </div>
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/nUrZJc2.jpeg" alt="Penthouse aftermath">
+                    <p>Penthouse Night<br><span style="font-size: 0.85em; opacity: 0.8;">uh well this was on penthouse after we um did stuff yes</span></p>
+                </div>
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/Tlk9AG3.jpeg" alt="Adorable photo">
+                    <p>So Adorable<br><span style="font-size: 0.85em; opacity: 0.8;">your just really adorable i cant yes so cute and silly hehe</span></p>
+                </div>
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/Pmp7AqQ.jpeg" alt="Date photo">
+                    <p>Special Date<br><span style="font-size: 0.85em; opacity: 0.8;">very uh cool date kinda idk what that was something tho</span></p>
+                </div>
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/un37Xs1.jpeg" alt="Quest fun">
+                    <p>Quest Fun<br><span style="font-size: 0.85em; opacity: 0.8;">yes quest was fun and damn i look clapped</span></p>
+                </div>
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/zjtv23X.jpeg" alt="Silly photos">
+                    <p>Silly Moments<br><span style="font-size: 0.85em; opacity: 0.8;">id love taking silly photos and doing silly stuff and silly yes</span></p>
+                </div>
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/7Cbdjhr.jpeg" alt="Slay beautiful">
+                    <p>Slay Beautiful<br><span style="font-size: 0.85em; opacity: 0.8;">me whenever i see you cuz you so slay and beautiful</span></p>
+                </div>
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/3TRJ9TE.jpeg" alt="Onam kiss">
+                    <p>Onam Memories<br><span style="font-size: 0.85em; opacity: 0.8;">onam very nice kiss kiss</span></p>
+                </div>
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/Gt6iyjn.jpeg" alt="Farewell">
+                    <p>Farewell Cuties<br><span style="font-size: 0.85em; opacity: 0.8;">farewelll we look very cute</span></p>
+                </div>
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/6rWXx2H.jpeg" alt="Dancing">
+                    <p>Dancing Together<br><span style="font-size: 0.85em; opacity: 0.8;">cant believe we danced infront of all these people</span></p>
+                </div>
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/3ZgDJnP.jpeg" alt="I win">
+                    <p>I Win!<br><span style="font-size: 0.85em; opacity: 0.8;">hahaha i win</span></p>
+                </div>
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/s3if4Mt.jpeg" alt="Library date">
+                    <p>Library Date<br><span style="font-size: 0.85em; opacity: 0.8;">library date very niceee</span></p>
+                </div>
+                <div class="image-card" onclick="openModal(this)">
+                    <img src="https://i.imgur.com/10G2Eck.jpeg" alt="Graduation">
+                    <p>Graduation Day<br><span style="font-size: 0.85em; opacity: 0.8;">graduationnnn</span></p>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- Image Modal Viewer -->
+    <div id="imageModal" onclick="closeModal()">
+        <img id="modalImg" src="" alt="Zoomed photo">
+        <p id="modalCaption"></p>
+    </div>
+
+    <!-- WebCam & Floating Heart Animation Script -->
     <script>
+        // --- Modal Viewer Script ---
+        function openModal(card) {
+            const img = card.querySelector('img');
+            const text = card.querySelector('p').innerText;
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            const modalCaption = document.getElementById('modalCaption');
+
+            modalImg.src = img.src;
+            modalCaption.innerText = text;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        // --- Interactive Floating Hearts & Click Burst Canvas ---
+        const canvas = document.getElementById('heartCanvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        class HeartParticle {
+            constructor(x, y, isBurst = false) {
+                this.x = x || Math.random() * width;
+                this.y = y || height + 20;
+                this.size = Math.random() * 16 + 8;
+                this.speedY = isBurst ? (Math.random() - 0.5) * 8 : Math.random() * -1.5 - 0.5;
+                this.speedX = isBurst ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 0.8;
+                this.opacity = isBurst ? 1 : Math.random() * 0.7 + 0.3;
+                this.color = `hsl(${Math.random() * 30 + 330}, 100%, ${Math.random() * 30 + 60}%)`;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.isBurst = isBurst;
+                this.life = isBurst ? 60 : 1000;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                
+                ctx.beginPath();
+                const topCurveHeight = this.size * 0.3;
+                ctx.moveTo(0, topCurveHeight);
+                ctx.bezierCurveTo(0, 0, -this.size / 2, 0, -this.size / 2, topCurveHeight);
+                ctx.bezierCurveTo(-this.size / 2, (this.size + topCurveHeight) / 2, 0, this.size, 0, this.size);
+                ctx.bezierCurveTo(0, this.size, this.size / 2, (this.size + topCurveHeight) / 2, this.size / 2, topCurveHeight);
+                ctx.bezierCurveTo(this.size / 2, 0, 0, 0, 0, topCurveHeight);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                
+                if (this.isBurst) {
+                    this.opacity -= 0.015;
+                    this.life--;
+                } else {
+                    if (this.y < -20) {
+                        this.y = height + 20;
+                        this.x = Math.random() * width;
+                    }
+                }
+            }
+        }
+
+        const particles = Array.from({ length: 45 }, () => new HeartParticle());
+
+        function spawnBurst(x, y) {
+            for (let i = 0; i < 18; i++) {
+                particles.push(new HeartParticle(x, y, true));
+            }
+        }
+
+        window.addEventListener('click', (e) => {
+            if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && !e.target.closest('#imageModal')) {
+                spawnBurst(e.clientX, e.clientY);
+            }
+        });
+
+        let mouseTimer = 0;
+        window.addEventListener('mousemove', (e) => {
+            mouseTimer++;
+            if (mouseTimer % 4 === 0) {
+                const particle = new HeartParticle(e.clientX, e.clientY, true);
+                particle.speedY = (Math.random() - 0.5) * 2;
+                particle.speedX = (Math.random() - 0.5) * 2;
+                particles.push(particle);
+            }
+        });
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                p.draw();
+                if (p.isBurst && (p.opacity <= 0 || p.life <= 0)) {
+                    particles.splice(i, 1);
+                }
+            }
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        // --- WebCam Script ---
         const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
+        const canvasElem = document.getElementById('canvas');
         const photo = document.getElementById('photo');
         const captureButton = document.getElementById('capture');
 
-        // Access webcam
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-                video.play();
-            })
-            .catch(err => {
-                console.error("Error accessing webcam: ", err);
-            });
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch(err => {
+                    console.error("Error accessing webcam: ", err);
+                });
+        }
 
-        // Take photo
         captureButton.addEventListener('click', () => {
-            const context = canvas.getContext('2d');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const context = canvasElem.getContext('2d');
+            if (video.videoWidth > 0 && video.videoHeight > 0) {
+                canvasElem.width = video.videoWidth;
+                canvasElem.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvasElem.width, canvasElem.height);
 
-            const link = document.createElement('a');
-            link.download = 'photo.jpg';
-            link.href = canvas.toDataURL('image/jpeg');
-            link.click();
+                const dataUrl = canvasElem.toDataURL('image/jpeg');
+                photo.src = dataUrl;
 
-            photo.src = canvas.toDataURL('image/jpeg');
+                const link = document.createElement('a');
+                link.download = 'us_photobooth.jpg';
+                link.href = dataUrl;
+                link.click();
+            }
+        });
+
+        // --- Music Toggle Placeholder ---
+        const musicBtn = document.getElementById('musicToggle');
+        let isPlaying = false;
+        musicBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            musicBtn.style.background = isPlaying ? 'rgba(255, 51, 102, 0.8)' : 'rgba(255, 51, 102, 0.4)';
+            musicBtn.title = isPlaying ? 'Music Playing (Demo)' : 'Toggle Ambient Music';
         });
     </script>
-<
-
-        <div class="poem">
-  <h3 style="font-size: 32px;">Photos</h3>
-
-  <!DOCTYPE html>
-<html>
-<head>
-  <title>Image Display</title>
-  <style>
-    body {
-      background-color: #ffe6f0;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      padding-top: 50px;
-    }
-
-    .image-container {
-      display: inline-block;
-    }
-
-    img {
-      width: 400px;
-      border: 3px solid #ff99cc;
-      border-radius: 15px;
-    }
-
-    p {
-      color: #cc3366;
-      font-style: italic;
-      margin-top: 10px;
-      margin-bottom: 0;
-    }
-  </style>
-</head>
-<body>
-
-
-    
-  <div class="image-container">
- <img src="https://i.imgur.com/C9DVPIr.jpeg" alt="After Valentine's card">
-    <p>our very first picture togather it was quite windy and awkward but nice </p>
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Image Display</title>
-  <style>
-    body {
-      background-color: #ffe6f0;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      padding-top: 50px;
-    }
-
-    .image-container {
-      display: inline-block;
-    }
-
-    img {
-      width: 400px;
-      border: 3px solid #ff99cc;
-      border-radius: 15px;
-    }
-
-    p {
-      color: #cc3366;
-      font-style: italic;
-      margin-top: 10px;
-      margin-bottom: 0;
-    }
-  </style>
-</head>
-<body>
-
-
-    
-  <div class="image-container">
-    <img src="https://i.imgur.com/zo8KfA6.jpeg" alt="Penthouse moment">
-    <p>this was after i gave you my first ever card on valentines </p>
-  
-
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Image Display</title>
-  <style>
-    body {
-      background-color: #ffe6f0;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      padding-top: 50px;
-    }
-
-    .image-container {
-      display: inline-block;
-    }
-
-    img {
-      width: 400px;
-      border: 3px solid #ff99cc;
-      border-radius: 15px;
-    }
-
-    p {
-      color: #cc3366;
-      font-style: italic;
-      margin-top: 10px;
-      margin-bottom: 0;
-    }
-  </style>
-</head>
-<body>
-
-
-    
-  <div class="image-container">
-<img src="https://i.imgur.com/nUrZJc2.jpeg" alt="Adorable Samwise">
-    <p>uh well this was on penthouse after we um did stuff yes </p>
-
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Image Display</title>
-  <style>
-    body {
-      background-color: #ffe6f0;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      padding-top: 50px;
-    }
-
-    .image-container {
-      display: inline-block;
-    }
-
-    img {
-      width: 400px;
-      border: 3px solid #ff99cc;
-      border-radius: 15px;
-    }
-
-    p {
-      color: #cc3366;
-      font-style: italic;
-      margin-top: 10px;
-      margin-bottom: 0;
-    }
-  </style>
-</head>
-<body>
-
-
-    
-  <div class="image-container">
-   <img src="https://i.imgur.com/Tlk9AG3.jpeg" alt="Cool date">
-    <p>your just really adorable i cant yes so cute and silly hehe </p>
-    
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Image Display</title>
-  <style>
-    body {
-      background-color: #ffe6f0;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      padding-top: 50px;
-    }
-
-    .image-container {
-      display: inline-block;
-    }
-
-    img {
-      width: 400px;
-      border: 3px solid #ff99cc;
-      border-radius: 15px;
-    }
-
-    p {
-      color: #cc3366;
-      font-style: italic;
-      margin-top: 10px;
-      margin-bottom: 0;
-    }
-  </style>
-</head>
-<body>
-
-
-    
-  <div class="image-container">
-     ><img src="https://i.imgur.com/Pmp7AqQ.jpeg" alt="Quest fun"> 
-    <p>very uh cool date kinda idk what that was something tho </p>
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Image Display</title>
-  <style>
-    body {
-      background-color: #ffe6f0;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      padding-top: 50px;
-    }
-
-    .image-container {
-      display: inline-block;
-    }
-
-    img {
-      width: 400px;
-      border: 3px solid #ff99cc;
-      border-radius: 15px;
-    }
-
-    p {
-      color: #cc3366;
-      font-style: italic;
-      margin-top: 10px;
-      margin-bottom: 0;
-    }
-  </style>
-</head>
-<body>
-
-
-    
-  <div class="image-container">
-    ><img src="https://i.imgur.com/un37Xs1.jpeg" alt="Quest fun">
-    <p>yes quest was fun and damn i look clapped
-    <p>
-    
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Image Display</title>
-  <style>
-    body {
-      background-color: #ffe6f0;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      padding-top: 50px;
-    }
-
-    .image-container {
-      display: inline-block;
-    }
-
-    img {
-      width: 400px;
-      border: 3px solid #ff99cc;
-      border-radius: 15px;
-    }
-
-    p {
-      color: #cc3366;
-      font-style: italic;
-      margin-top: 10px;
-      margin-bottom: 0;
-    }
-  </style>
-</head>
-<body>
-
-
-    
-  <div class="image-container">
-   <img src="https://i.imgur.com/zjtv23X.jpeg" alt="Silly photos">
-    <p>i love taking silly photos and doing silly stuff and silly yes
-    <p>
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Image Display</title>
-  <style>
-    body {
-      background-color: #ffe6f0;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      padding-top: 50px;
-    }
-
-    .image-container {
-      display: inline-block;
-    }
-
-    img {
-      width: 400px;
-      border: 3px solid #ff99cc;
-      border-radius: 15px;
-    }
-
-    p {
-      color: #cc3366;
-      font-style: italic;
-      margin-top: 10px;
-      margin-bottom: 0;
-    }
-  </style>
-</head>
-<body>
-
-
-    
-  <div class="image-container">
-    <img src="https://i.imgur.com/7Cbdjhr.jpeg" alt="Slay beautiful">
-    <p>me whenever i see you cuz you so slay and beautiful
-    <p>
-
-</div>
+</body>
+</html>
